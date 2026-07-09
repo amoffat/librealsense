@@ -5,9 +5,9 @@ Current version of the docker includes the following capabilities:
 - use of librealsense devices
 - use of librealsense API
 - installation of the basic examples for use of librealsense
+- graphical applications such as `realsense-viewer`, including from Wayland hosts through XWayland
 
 It does not include (may be enabled later on):
-- graphic examples
 - use of IMU devices
 
 ## Pre-Work: Docker Installation
@@ -61,7 +61,7 @@ Remark: In each of the alternative ways, the aim of the lines:
 
     The included helper script forwards the required X11 environment, socket, and Xauthority file automatically:
     ```
-    ./run_image.sh rs-depth
+    ./run_image.sh realsense-viewer
     ```
 
     If you prefer to invoke `docker run` directly, include the X11 forwarding flags:
@@ -76,7 +76,7 @@ Remark: In each of the alternative ways, the aim of the lines:
        -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
        --device-cgroup-rule "c 81:* rmw" \
        --device-cgroup-rule "c 189:* rmw" \
-       librealsense/librealsense rs-depth
+       librealsense/librealsense realsense-viewer
     ```
 
     On Fedora Wayland, if X11 authentication is still denied, allow the local root container user to connect to XWayland before launching the container:
@@ -89,11 +89,11 @@ Remark: In each of the alternative ways, the aim of the lines:
     ```
 
 - ### Custom Command
-    In order to run some arbitrary command (run of the rs-depth demo in the following example), one can run for example:
+    In order to run some arbitrary command (run of `realsense-viewer` in the following example), one can run for example:
     ```
-    ./run_image.sh rs-depth
+    ./run_image.sh realsense-viewer
     ```
-    Then, the realsense depth will be displayed as in the following video:
+    Then, the graphical application will be displayed as in the following video:
     ![](LRS_Docker_Depth_example.gif)
 
     
@@ -113,7 +113,6 @@ This is done by running the [image building script](build_image.sh) - run it in 
 ```
 
 Then, running the container is done as described [above](#Running-the-Container) .
-
 
 
 
