@@ -56,14 +56,38 @@ Remark: In each of the alternative ways, the aim of the lines:
 
     The default command that will run is: `rs-enumerate-devices --compact`
 
+- ### Graphical applications from X11 or Wayland hosts
+    GUI applications in the container use X11. On a Wayland desktop (for example Fedora Workstation), this still works by forwarding X11 to the host's XWayland server.
+
+    The included helper script forwards the required X11 environment, socket, and Xauthority file automatically:
+    ```
+    ./run_image.sh rs-depth
+    ```
+
+    If you prefer to invoke `docker run` directly, include the X11 forwarding flags:
+    ```
+    docker run -it --rm \
+       -v /dev:/dev \
+       -e DISPLAY=$DISPLAY \
+       -e QT_QPA_PLATFORM=xcb \
+       -e GDK_BACKEND=x11 \
+       -e XAUTHORITY=/tmp/.docker.xauth \
+       -v ${XAUTHORITY:-$HOME/.Xauthority}:/tmp/.docker.xauth:ro \
+       -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+       --device-cgroup-rule "c 81:* rmw" \
+       --device-cgroup-rule "c 189:* rmw" \
+       librealsense/librealsense rs-depth
+    ```
+
+    On Fedora Wayland, if X11 authentication is still denied, allow the local root container user to connect to XWayland before launching the container:
+    ```
+    xhost +si:localuser:root
+    ```
+
 - ### Custom Command
     In order to run some arbitrary command (run of the rs-depth demo in the following example), one can run for example:
     ```
-    docker run -it --rm \
-        -v /dev:/dev \
-        --device-cgroup-rule "c 81:* rmw" \
-        --device-cgroup-rule "c 189:* rmw" \
-        librealsense/librealsense rs-depth
+    ./run_image.sh rs-depth
     ```
     Then, the realsense depth will be displayed as in the following video:
     ![](LRS_Docker_Depth_example.gif)
@@ -73,11 +97,7 @@ Remark: In each of the alternative ways, the aim of the lines:
 - ### Running shell
     Use the following command in order to interact with the Docker via shell interface:
     ```
-    docker run -it --rm \
-        -v /dev:/dev \
-        --device-cgroup-rule "c 81:* rmw" \
-        --device-cgroup-rule "c 189:* rmw" \
-        librealsense/librealsense /bin/bash
+    ./run_image.sh /bin/bash
     ```
 
 # Building librealsense docker image
@@ -89,7 +109,6 @@ This is done by running the [image building script](build_image.sh) - run it in 
 ```
 
 Then, running the container is done as described [above](#Running-the-Container) .
-
 
 
 
