@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-# By using --device-cgroup-rule flag we grant the docker continer permissions -
+# By using --device-cgroup-rule flag we grant the docker container permissions -
 # to the camera and usb endpoints of the machine.
-# It also mounts the /dev directory of the host platform on the contianer.
+# It also mounts the /dev directory of the host platform on the container.
 # If the host is running Wayland, we still forward X11 so GUI apps can use
 # XWayland on the host.
 docker_args=(
