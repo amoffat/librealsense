@@ -44,7 +44,7 @@ RUN cd /usr/src/librealsense \
     -DCMAKE_C_FLAGS_RELEASE="${CMAKE_C_FLAGS_RELEASE} -s" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CMAKE_CXX_FLAGS_RELEASE} -s" \
     -DCMAKE_INSTALL_PREFIX=/opt/librealsense \    
-    -DBUILD_GRAPHICAL_EXAMPLES=OFF \
+    -DBUILD_GRAPHICAL_EXAMPLES=ON \
     -DBUILD_PYTHON_BINDINGS:bool=true \
     -DCMAKE_BUILD_TYPE=Release ../ \
     && make -j$(($(nproc)-1)) all \
@@ -61,12 +61,19 @@ COPY --from=librealsense-builder /usr/lib/python3/dist-packages/pyrealsense2 /us
 COPY --from=librealsense-builder /usr/src/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/
 COPY --from=librealsense-builder /usr/src/librealsense/config/99-realsense-d4xx-mipi-dfu.rules /etc/udev/rules.d/
 ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib
+ENV QT_QPA_PLATFORM=xcb
+ENV GDK_BACKEND=x11
 
 # Install dep packages
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \	
     libusb-1.0-0 \
+    libgtk-3-0 \
+    libglfw3 \
+    libgl1 \
+    libglu1-mesa \
     udev \
+    xauth \
     apt-transport-https \
     ca-certificates \
     curl \
