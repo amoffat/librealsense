@@ -72,7 +72,7 @@ Remark: In each of the alternative ways, the aim of the lines:
        -e QT_QPA_PLATFORM=xcb \
        -e GDK_BACKEND=x11 \
        -e XAUTHORITY=/tmp/.docker.xauth \
-       -v ${XAUTHORITY:-$HOME/.Xauthority}:/tmp/.docker.xauth:ro \
+       -v "${XAUTHORITY:-$HOME/.Xauthority}":/tmp/.docker.xauth:ro \
        -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
        --device-cgroup-rule "c 81:* rmw" \
        --device-cgroup-rule "c 189:* rmw" \
@@ -82,6 +82,10 @@ Remark: In each of the alternative ways, the aim of the lines:
     On Fedora Wayland, if X11 authentication is still denied, allow the local root container user to connect to XWayland before launching the container:
     ```
     xhost +si:localuser:root
+    ```
+    Revoke that permission after use:
+    ```
+    xhost -si:localuser:root
     ```
 
 - ### Custom Command
@@ -109,7 +113,6 @@ This is done by running the [image building script](build_image.sh) - run it in 
 ```
 
 Then, running the container is done as described [above](#Running-the-Container) .
-
 
 
 

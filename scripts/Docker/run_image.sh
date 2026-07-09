@@ -23,7 +23,11 @@ if [[ -n "${DISPLAY:-}" ]]; then
     )
 fi
 
-xauthority_file="${XAUTHORITY:-${HOME}/.Xauthority}"
+xauthority_file="${XAUTHORITY:-}"
+if [[ -z "${xauthority_file}" ]]; then
+    xauthority_file="${HOME}/.Xauthority"
+fi
+
 if [[ -f "${xauthority_file}" ]]; then
     docker_args+=(
         -e XAUTHORITY=/tmp/.docker.xauth
